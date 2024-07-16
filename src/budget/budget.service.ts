@@ -9,6 +9,7 @@ import { Budget } from './entities/budget.entity';
 import { FindOneOptions, MoreThanOrEqual, Repository } from 'typeorm';
 import { TransactionService } from '@/transaction/transaction.service';
 import { TransactionType } from '@/transaction/interface/transaction.interface';
+import { UpdateBudgetDto } from './dto/update-budget.dto';
 
 @Injectable()
 export class BudgetService {
@@ -49,6 +50,42 @@ export class BudgetService {
 
       throw new InternalServerErrorException("Can't create budget");
     }
+  }
+
+  async updateBudget({
+    id,
+    userId,
+    data,
+  }: {
+    id: string;
+    userId: string;
+    data: UpdateBudgetDto;
+  }) {
+    const budget = await this.budgetRepository.findOneBy({
+      id,
+    });
+
+    if (!budget) throw new BadRequestException('Budget not found');
+
+    if (budget.userId !== userId)
+      throw new BadRequestException('Not authorized');
+
+    if (data.receiveAlert && !data.amountAlert)
+      throw new BadRequestException(
+        'Amount alert is required when receive alert is true',
+      );
+
+    if (!data.receiveAlert) {
+      data.amountAlert = null;
+    }
+    await this.budgetRepository.update(id, {
+      ...data,
+    });
+
+    return {
+      ...budget,
+      ...data,
+    };
   }
 
   getAllBudgesByUser({ userId }: { userId: string }) {
