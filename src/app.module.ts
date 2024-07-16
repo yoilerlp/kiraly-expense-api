@@ -13,6 +13,7 @@ import { CategoryModule } from './category/category.module';
 import { FileModule } from './file/file.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { TransferModule } from './transfer/transfer.module';
+import { BudgetModule } from './budget/budget.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { TransferModule } from './transfer/transfer.module';
     FileModule,
     TransactionModule,
     TransferModule,
+    BudgetModule,
   ],
   controllers: [],
   providers: [],
