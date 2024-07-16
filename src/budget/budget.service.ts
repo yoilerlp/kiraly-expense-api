@@ -88,6 +88,23 @@ export class BudgetService {
     };
   }
 
+  async deleteBudget({ id, userId }: { id: string; userId: string }) {
+    const budget = await this.budgetRepository.findOneBy({
+      id,
+    });
+
+    if (!budget) throw new BadRequestException('Budget not found');
+
+    if (budget.userId !== userId)
+      throw new BadRequestException('Not authorized');
+
+    await this.budgetRepository.delete(id);
+
+    return {
+      message: 'Budget deleted successfully',
+    };
+  }
+
   getAllBudgesByUser({ userId }: { userId: string }) {
     return this.budgetRepository.find({
       where: {

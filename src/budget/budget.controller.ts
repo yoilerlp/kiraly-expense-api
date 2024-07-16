@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   ParseUUIDPipe,
+  Delete,
 } from '@nestjs/common';
 import { BudgetService } from './budget.service';
 import { CreateBudgetDto } from './dto/create-budget.dto';
@@ -39,6 +40,17 @@ export class BudgetController {
       id,
       userId: user.userId,
       data: updateBudgetDto,
+    });
+  }
+
+  @Delete(':id')
+  deleteBudget(
+    @GetUser() user: IUserToken,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.budgetService.deleteBudget({
+      id,
+      userId: user.userId,
     });
   }
 
