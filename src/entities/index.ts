@@ -7,3 +7,4 @@ export * from '../file/entities/file.entity';
 export * from '../file/entities/transaction-file.entity';
 export * from '../file/entities/transfer-file.entity';
 export * from '../transfer/entities/transfer.entity';
+export * from '../budget/entities/budget.entity';

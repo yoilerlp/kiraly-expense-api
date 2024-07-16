@@ -1,7 +1,6 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
-
 import { validate } from '@/common/helper/env.validation';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';

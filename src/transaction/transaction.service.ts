@@ -276,10 +276,10 @@ export class TransactionService {
   }
 
   async findAll({
-    user,
+    userId,
     query,
   }: {
-    user: IUserToken;
+    userId: string;
     query: FilterTransactionDto;
   }) {
     const { limit = 10, page = 1, orderBy, type } = query || {};
@@ -293,7 +293,7 @@ export class TransactionService {
     const take = Number(limit) || 10;
 
     const whereOptions: FindOneOptions<Transaction>['where'] = {
-      userId: user.userId,
+      userId: userId,
     };
 
     // fitler for type of transaction
@@ -411,7 +411,7 @@ export class TransactionService {
 
     const year = 2024;
 
-    const month = 5;
+    const month = 6;
 
     // Determina el número de días en el mes y año dados
     const daysInMonth = new Date(year, month, 0).getDate();

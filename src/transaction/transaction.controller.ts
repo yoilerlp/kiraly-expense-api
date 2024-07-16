@@ -55,7 +55,7 @@ export class TransactionController {
   @HttpCode(200)
   findAll(@GetUser() user: IUserToken, @Body() query: FilterTransactionDto) {
     return this.transactionService.findAll({
-      user,
+      userId: user.userId,
       query,
     });
   }
