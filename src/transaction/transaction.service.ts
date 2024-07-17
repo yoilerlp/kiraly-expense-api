@@ -29,6 +29,8 @@ import { GET_MIN_AND_MAX_TRANSACTION_DATE } from '@/common/helper/query';
 import { getEndOfMonth } from '@/common/helper/date';
 import { TransactionType } from './interface/transaction.interface';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { TransactionEvents } from '@/common/events';
 
 @Injectable()
 export class TransactionService {
@@ -39,6 +41,7 @@ export class TransactionService {
     private transactionFileRepository: Repository<TransactionFile>,
     private dataSource: DataSource,
     private fileService: FileService,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   async getMinAndMaxTransactionDate(user: IUserToken) {
@@ -166,6 +169,11 @@ export class TransactionService {
       // commit transaction
       await queryRunner.commitTransaction();
 
+      // emit event
+      if (transaction.type === TransactionType.EXPENSE) {
+        this.eventEmitter.emit(TransactionEvents.CREATED, transaction);
+      }
+
       return transaction;
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -242,7 +250,7 @@ export class TransactionService {
       if (filesToDelete) {
         const filesToDeleteParsed: string[] =
           JSON.parse(filesToDelete as any) || [];
-          
+
         queryRunner.manager.delete(TransactionFile, {
           id: In(
             filesToDeleteParsed.map((transactionFileId) => transactionFileId),

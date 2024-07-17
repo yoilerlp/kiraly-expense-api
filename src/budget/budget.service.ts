@@ -105,6 +105,47 @@ export class BudgetService {
     };
   }
 
+  async getAllBudgesByCategory({
+    userId,
+    year,
+    category,
+  }: {
+    userId: string;
+    category: string;
+    year?: number;
+  }) {
+    const whereOptions: FindOneOptions<Budget>['where'] = {
+      userId: userId,
+      categoryId: category,
+    };
+
+    if (year) {
+      const minDate = new Date(year, 0, 1);
+      whereOptions.createdAt = MoreThanOrEqual(minDate);
+    }
+
+    const budgetsList = await this.budgetRepository.find({
+      where: whereOptions,
+      relations: ['user', 'category'],
+    });
+
+    const budgetsWithTransactions = await Promise.all(
+      budgetsList.map(async (budget) => {
+        return {
+          ...budget,
+          transactions: await this.getBudgetTransactions({
+            category,
+            year: budget.year,
+            month: budget.month,
+            userId,
+          }),
+        };
+      }),
+    );
+
+    return budgetsWithTransactions;
+  }
+
   getAllBudgesByUser({ userId }: { userId: string }) {
     return this.budgetRepository.find({
       where: {

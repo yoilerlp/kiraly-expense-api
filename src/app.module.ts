@@ -13,6 +13,7 @@ import { FileModule } from './file/file.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { TransferModule } from './transfer/transfer.module';
 import { BudgetModule } from './budget/budget.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { BudgetModule } from './budget/budget.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
+
     TypeOrmModule.forRootAsync({
       useFactory(config: ConfigService) {
         return {
@@ -42,15 +44,27 @@ import { BudgetModule } from './budget/budget.module';
       },
       inject: [ConfigService],
     }),
+
+    EventEmitterModule.forRoot(),
+
     MailModule.registerAsync(),
+
     UserModule,
+
     AuthModule,
+
     OtpModule,
+
     AccountModule,
+
     CategoryModule,
+
     FileModule,
+
     TransactionModule,
+
     TransferModule,
+
     BudgetModule,
   ],
   controllers: [],
