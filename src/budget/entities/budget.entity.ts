@@ -39,6 +39,11 @@ export class Budget {
   })
   receiveAlert: boolean;
 
+  @Column({
+    default: false,
+  })
+  alertNotified: boolean;
+
   @Column({ type: 'int', nullable: false })
   month: number;
 

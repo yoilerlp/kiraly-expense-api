@@ -14,12 +14,22 @@ export class CategoryService {
   async create(createCategoryDto: CreateCategoryDto) {
     try {
       const category = this.categoryRepository.create(createCategoryDto);
-      return  await this.categoryRepository.save(category);
+      return await this.categoryRepository.save(category);
     } catch (error) {
-      if(error.code === '23505') {
+      if (error.code === '23505') {
         throw new BadRequestException('This category already exists');
       }
       console.log('error', error);
+      throw error;
+    }
+  }
+
+  async createMany(data: any) {
+    try {
+      const result = this.categoryRepository.create(data.categories);
+
+      return await this.categoryRepository.save(result);
+    } catch (error) {
       throw error;
     }
   }

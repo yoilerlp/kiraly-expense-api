@@ -2,11 +2,12 @@ import {
   Controller,
   Post,
   Body,
-  HttpCode,
   Patch,
   Param,
   ParseUUIDPipe,
   Delete,
+  Query,
+  Get,
 } from '@nestjs/common';
 import { BudgetService } from './budget.service';
 import { CreateBudgetDto } from './dto/create-budget.dto';
@@ -54,15 +55,34 @@ export class BudgetController {
     });
   }
 
-  @Post('filter')
-  @HttpCode(200)
+  @Get('filter')
   getAllBudgesByFilters(
-    @Body() body: FilterBudgetsDto,
     @GetUser() user: IUserToken,
+    @Query() query: FilterBudgetsDto,
   ) {
+    const { year, month } = query;
+
     return this.budgetService.getAllBudgesByFilters({
       userId: user.userId,
-      year: body.year,
+      year: year || new Date().getFullYear(),
+      month: month || new Date().getMonth() + 1,
+    });
+  }
+  @Get('history')
+  getAllBudgesHistory(@GetUser() user: IUserToken) {
+    return this.budgetService.getAllBudgesByUser({
+      userId: user.userId,
+    });
+  }
+
+  @Get(':id')
+  getBudgetById(
+    @GetUser() user: IUserToken,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.budgetService.getBudgetById({
+      userId: user.userId,
+      budgetId: id,
     });
   }
 }

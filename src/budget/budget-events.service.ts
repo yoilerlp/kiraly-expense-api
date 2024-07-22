@@ -15,7 +15,6 @@ export class BudgetEventsService {
 
   @OnEvent(TransactionEvents.CREATED)
   async handleOnCreateTransaction(payload: TransactionCreatedPayload) {
-    
     if (payload.type !== TransactionType.EXPENSE) return;
 
     const budgetList = await this.budgetService.getAllBudgesByCategory({
@@ -30,6 +29,8 @@ export class BudgetEventsService {
       if (!budget?.transactions?.length) return;
       if (!budget?.receiveAlert) return;
 
+      if (budget?.alertNotified) return;
+
       const totalCategoryExpenses = budget?.transactions.reduce(
         (total, transaction) => {
           const isExpense = transaction.type === TransactionType.EXPENSE;
@@ -39,13 +40,11 @@ export class BudgetEventsService {
         0,
       );
 
-      const { user: budgetUser } = budget;
-
       //   send mail de alerta
-      if (totalCategoryExpenses > budget?.amountAlert && budgetUser) {
+      if (totalCategoryExpenses > budget?.amountAlert && budget.user) {
         const subject = `Alerta de budget - ${budget.category.name}`;
         await this.mailService.sendMail({
-          to: budgetUser.email,
+          to: budget.user.email,
           subject,
           html: `
             <h1>${subject}</h1>
@@ -56,6 +55,10 @@ export class BudgetEventsService {
               Monto restante: ${budget.amount - totalCategoryExpenses}
             </h2>
           `,
+        });
+
+        await this.budgetService.updateBudgetNotification({
+          id: budget.id,
         });
       }
     });

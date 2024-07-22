@@ -6,7 +6,7 @@ import {
 import { CreateBudgetDto } from './dto/create-budget.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Budget } from './entities/budget.entity';
-import { FindOneOptions, MoreThanOrEqual, Repository } from 'typeorm';
+import { Equal, FindOneOptions, MoreThanOrEqual, Repository } from 'typeorm';
 import { TransactionService } from '@/transaction/transaction.service';
 import { TransactionType } from '@/transaction/interface/transaction.interface';
 import { UpdateBudgetDto } from './dto/update-budget.dto';
@@ -43,13 +43,54 @@ export class BudgetService {
 
       return this.budgetRepository.save(budgetItem);
     } catch (error) {
-      console.error(error);
       if (error instanceof BadRequestException) {
         throw error;
       }
 
       throw new InternalServerErrorException("Can't create budget");
     }
+  }
+
+  async getBudgetById({
+    budgetId,
+    userId,
+  }: {
+    budgetId: string;
+    userId: string;
+  }) {
+    const budget = await this.budgetRepository.findOne({
+      where: {
+        id: Equal(budgetId),
+        userId: Equal(userId),
+      },
+      relations: ['category'],
+    });
+
+    if (!budget) throw new BadRequestException('Budget not found');
+
+    const transactions = await this.getBudgetTransactions({
+      category: budget.category.id!,
+      year: budget?.year,
+      month: budget?.month,
+      userId,
+    });
+
+    return {
+      ...budget,
+      transactions,
+    };
+  }
+
+  async updateBudgetNotification({ id }: { id: string }) {
+    const budget = await this.budgetRepository.findOneBy({
+      id,
+    });
+
+    if (!budget) throw new BadRequestException('Budget not found');
+
+    await this.budgetRepository.update(id, {
+      alertNotified: true,
+    });
   }
 
   async updateBudget({
@@ -149,8 +190,9 @@ export class BudgetService {
   getAllBudgesByUser({ userId }: { userId: string }) {
     return this.budgetRepository.find({
       where: {
-        userId,
+        userId: Equal(userId),
       },
+      relations: ['category'],
     });
   }
 
@@ -184,15 +226,16 @@ export class BudgetService {
   async getAllBudgesByFilters({
     userId,
     year,
+    month,
   }: {
     userId: string;
     year: number;
+    month: number;
   }) {
-    const minDate = new Date(year, 0, 1);
-
     const whereOptions: FindOneOptions<Budget>['where'] = {
       userId: userId,
-      createdAt: MoreThanOrEqual(minDate),
+      month: Equal(month),
+      year: Equal(year),
     };
 
     const budgets = await this.budgetRepository.find({

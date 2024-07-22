@@ -11,9 +11,13 @@ export class CategoryController {
     return this.categoryService.create(createCategoryDto);
   }
 
+  @Post('bull-create')
+  createBull(@Body() body: any) {
+    return this.categoryService.createMany(body);
+  }
+
   @Get()
   findAll() {
     return this.categoryService.findAll();
   }
-
 }
