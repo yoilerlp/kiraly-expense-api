@@ -187,11 +187,20 @@ export class BudgetService {
     return budgetsWithTransactions;
   }
 
-  getAllBudgesByUser({ userId }: { userId: string }) {
+  getAllBudgesByUser({
+    userId,
+    filterOptions
+  }: {
+    userId: string;
+    filterOptions?: FindOneOptions<Budget>['where'];
+  }) {
+    const whereOptions: FindOneOptions<Budget>['where'] = {
+      userId,
+      ...filterOptions || {}
+    };
+    
     return this.budgetRepository.find({
-      where: {
-        userId: Equal(userId),
-      },
+      where: whereOptions,
       relations: ['category'],
     });
   }

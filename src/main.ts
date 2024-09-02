@@ -22,6 +22,10 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
-  await app.listen(3000);
+
+  const PORT = 3001;
+  await app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
 }
 bootstrap();

@@ -1,6 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   BadRequestException,
+  HttpException,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
@@ -10,12 +11,14 @@ import { User } from '@/entities';
 import {
   CreateUserDto,
   UpdatePasswordDto,
+  UpdateUserDto,
   VerifyUserDto,
 } from './dto/create-user.dto';
 import { hashPassword } from '@/common/helper/password';
 import { OtpService } from '@/otp/otp.service';
 import { MailService } from '@/mail/mail.service';
 import { OTPType } from '@/otp/interfaces/otp.interface';
+import { FileService } from '@/file/file.service';
 
 @Injectable()
 export class UserService {
@@ -25,6 +28,7 @@ export class UserService {
     private otpService: OtpService,
     private dataSource: DataSource,
     private mailService: MailService,
+    private fileService: FileService,
   ) {}
 
   async createUser(createUserDto: CreateUserDto) {
@@ -57,6 +61,55 @@ export class UserService {
       await queryRunner.commitTransaction();
 
       return user;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      this.handleError(error);
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async updateUser({
+    photo,
+    data,
+    userId,
+  }: {
+    photo?: Express.Multer.File;
+    data: UpdateUserDto;
+    userId: string;
+  }) {
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      const user = await this.userRepository.findOneBy({ id: userId });
+
+      if (!user) {
+        throw new BadRequestException('User not found');
+      }
+
+      let photoFileUrl: string = user.photo;
+
+      if (photo) {
+        const photoFile = await this.fileService.uploadFileToStore(photo);
+        await queryRunner.manager.save(photoFile);
+        photoFileUrl = photoFile.url;
+      }
+
+      await queryRunner.manager.update(User, userId, {
+        ...data,
+        photo: photoFileUrl,
+      });
+
+      // commit transaction
+      await queryRunner.commitTransaction();
+
+      return {
+        ...user,
+        ...data,
+        photo: photoFileUrl,
+      };
     } catch (error) {
       await queryRunner.rollbackTransaction();
       this.handleError(error);
@@ -190,6 +243,11 @@ export class UserService {
     if (error.code === '23505') {
       throw new BadRequestException('User already exists');
     }
+
+    if (error instanceof HttpException) {
+      throw error;
+    }
+
     throw new InternalServerErrorException();
   }
 }

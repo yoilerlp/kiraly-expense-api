@@ -1,6 +1,7 @@
 import {
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   IsString,
   MaxLength,
   MinLength,
@@ -20,6 +21,17 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   password: string;
+}
+
+export class UpdateUserDto {
+  @IsOptional()
+  name: string;
+
+  @IsOptional()
+  lastName: string;
+
+  @IsOptional()
+  file: any;
 }
 
 export class VerifyUserDto {

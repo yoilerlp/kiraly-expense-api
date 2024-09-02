@@ -36,4 +36,10 @@ export class User {
     default: false,
   })
   isActive: boolean;
+
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  photo: string | null;
 }

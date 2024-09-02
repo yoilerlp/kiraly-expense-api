@@ -14,6 +14,7 @@ import { TransactionModule } from './transaction/transaction.module';
 import { TransferModule } from './transfer/transfer.module';
 import { BudgetModule } from './budget/budget.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { StatisticsModule } from './statistics/statistics.module';
 
 @Module({
   imports: [
@@ -36,9 +37,9 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
           synchronize: true,
           retryAttempts: 3,
           useUTC: true,
-          logger: 'file',
-          logging: 'all',
           timezone: 'Z',
+          // logger: 'file',
+          // logging: 'all',
           // dropSchema: true,
         };
       },
@@ -66,6 +67,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     TransferModule,
 
     BudgetModule,
+
+    StatisticsModule,
   ],
   controllers: [],
   providers: [],

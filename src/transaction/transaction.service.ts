@@ -381,14 +381,15 @@ export class TransactionService {
 
   async insertRandosTransactions(user: IUserToken) {
     const accountIds = [
-      'bf82f6d9-230d-49e4-a4aa-ca972bebac5a',
-      '7e70390f-5618-48ab-8287-3cd082180bdf',
+      'ed2af030-afc5-4bbe-81f3-b73057d7e79b',
+      '6a9bfe8b-487e-4f4a-800c-c2b16a318fde',
     ];
 
     const categoryIds = [
-      '98791e6e-369a-49e0-978c-85e869109b4f',
-      '86f33f4c-fc5b-4ff2-a28d-5815cb097937',
-      '13a9b1d5-197c-41eb-8d1a-72fd3f5cb42a',
+      '0c00c973-7c7e-47ae-a68f-76e9446d37cc',
+      '7dd977c9-86e5-422a-8504-ee747e022395',
+      'f26cbb39-7ef9-4e0d-8ddf-1686f38d4707',
+      '34e60374-406e-47df-b0e1-084afea0d6f0',
     ];
 
     const transactionTypes = ['EXPENSE', 'INCOME'];
@@ -419,7 +420,7 @@ export class TransactionService {
 
     const year = 2024;
 
-    const month = 6;
+    const month = 9;
 
     // Determina el número de días en el mes y año dados
     const daysInMonth = new Date(year, month, 0).getDate();
@@ -427,7 +428,7 @@ export class TransactionService {
     // Genera transacciones para cada día del mes
     for (let day = 1; day <= daysInMonth; day++) {
       // Crea tres transacciones aleatorias para cada día
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 1; i++) {
         // Crea una fecha para el día actual del bucle
         const currentDate = new Date(year, month - 1, day);
         // Genera una transacción con la fecha actual
