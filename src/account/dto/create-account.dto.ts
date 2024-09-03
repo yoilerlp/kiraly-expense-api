@@ -1,4 +1,5 @@
 import { IsEnum, IsNotEmpty } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
 import { AccountType } from '../interfaces/account.interface';
 
 export class CreateAccountDTO {
@@ -13,3 +14,5 @@ export class CreateAccountDTO {
   @IsEnum(AccountType)
   type: AccountType;
 }
+
+export class UpdateAccountDTO extends PartialType(CreateAccountDTO) {}

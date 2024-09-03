@@ -118,6 +118,26 @@ export class TransactionService {
     }
   }
 
+  async getAccountBalanceByUser({
+    userId,
+    accountId,
+  }: {
+    userId: string;
+    accountId: string;
+  }) {
+    const accountBalance = await this.transactionRepository
+      .createQueryBuilder('t')
+      .select([
+        `SUM(CASE WHEN t.type = '${TransactionType.INCOME}' THEN t.amount ELSE 0 END) AS total_income`,
+        `SUM(CASE WHEN t.type = '${TransactionType.EXPENSE}' THEN t.amount ELSE 0 END) AS total_expense`,
+      ])
+      .where('t.userId = :userId', { userId })
+      .andWhere('t.accountId = :accountId', { accountId })
+      .getRawOne();
+
+    return accountBalance;
+  }
+
   async create({
     data,
     user,
