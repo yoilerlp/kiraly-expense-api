@@ -38,7 +38,7 @@ import { StatisticsModule } from './statistics/statistics.module';
           retryAttempts: 3,
           useUTC: true,
           timezone: 'Z',
-          // ssl: true,
+          ssl: true,
           // logger: 'file',
           // logging: 'all',
           // dropSchema: true,
