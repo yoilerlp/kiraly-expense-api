@@ -9,6 +9,7 @@ import {
 import { TransactionType } from '../interface/transaction.interface';
 import { OrderBy } from '@/common/interface/pagination';
 import { PickType } from '@nestjs/mapped-types';
+import { AccountType } from '@/account/interfaces/account.interface';
 
 export class FilterTransactionDto {
   @IsOptional()
@@ -45,6 +46,11 @@ export class FilterTransactionDto {
   @IsOptional()
   @IsEnum(OrderBy)
   orderBy?: OrderBy;
+
+  @IsOptional()
+  @IsArray()
+  @IsEnum(AccountType, { each: true })
+  accountTypes?: AccountType[] = [];
 }
 
 export class FilterTransferDto extends PickType(FilterTransactionDto, [

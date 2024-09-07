@@ -5,10 +5,11 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Account } from './entities/account.entity';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { CreateAccountDTO, UpdateAccountDTO } from './dto/create-account.dto';
 import { IUserToken } from '@/common/interface/userToken';
 import { TransactionService } from '@/transaction/transaction.service';
+import { AccountType } from './interfaces/account.interface';
 
 @Injectable()
 export class AccountService {
@@ -31,12 +32,44 @@ export class AccountService {
     }
   }
 
-  async getAllAcountsByUserId(userId: string) {
+  async getAllAcountsByUserId({
+    userId,
+    type,
+  }: {
+    userId: string;
+    type?: AccountType;
+  }) {
+    const isValidType = Object.values(AccountType).includes(type);
+
     return await this.accountRepository.find({
       where: {
         userId,
+        type: isValidType ? type : Not(AccountType.LOAN),
       },
     });
+  }
+
+  async getAllLoanAccountsWithBalanceByUserId({ userId }: { userId: string }) {
+    const accounts = await this.accountRepository.find({
+      where: {
+        userId,
+        type: AccountType.LOAN,
+      },
+    });
+
+    const accountsWithBalancePromises = accounts.map(async (account) => {
+      const balance = await this.transactionService.getAccountBalanceByUser({
+        userId,
+        accountId: account.id,
+      });
+
+      return {
+        account,
+        balance,
+      };
+    });
+
+    return Promise.all(accountsWithBalancePromises);
   }
 
   async getAccountWithBalanceById({

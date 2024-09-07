@@ -12,6 +12,7 @@ import {
   In,
   LessThanOrEqual,
   MoreThanOrEqual,
+  Not,
   QueryRunner,
   Repository,
 } from 'typeorm';
@@ -31,6 +32,8 @@ import { TransactionType } from './interface/transaction.interface';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { TransactionEvents } from '@/common/events';
+import { AccountType } from '@/account/interfaces/account.interface';
+import { OrderBy } from '@/common/interface/pagination';
 
 @Injectable()
 export class TransactionService {
@@ -83,12 +86,24 @@ export class TransactionService {
 
       whereOptions.createdAt = Between(new Date(startdate), new Date(end));
 
-      const transactions = await this.transactionRepository.find({
-        where: whereOptions,
-        order: {
-          createdAt: 'ASC',
+      const transactionsResult = await this.findAll({
+        userId: user.userId,
+        query: {
+          orderBy: OrderBy.NEWEST,
+          minDate: startdate,
+          maxDate: end,
+          limit: 1000,
         },
       });
+
+      const { rows: transactions } = transactionsResult;
+
+      // const transactions = await this.transactionRepository.find({
+      //   where: whereOptions,
+      //   order: {
+      //     createdAt: 'ASC',
+      //   },
+      // });
 
       const balance = transactions?.reduce(
         (acc, curr) => {
@@ -310,7 +325,13 @@ export class TransactionService {
     userId: string;
     query: FilterTransactionDto;
   }) {
-    const { limit = 10, page = 1, orderBy, type } = query || {};
+    const {
+      limit = 10,
+      page = 1,
+      orderBy,
+      type,
+      accountTypes = [],
+    } = query || {};
 
     const orderResultBy = generateSortBasicFilter({
       orderBy,
@@ -354,6 +375,12 @@ export class TransactionService {
         );
       }
     }
+
+    // account filters
+    // by default filter for non-loans
+    whereOptions.account = {
+      type: accountTypes?.length > 0 ? In(accountTypes) : Not(AccountType.LOAN),
+    };
 
     const [result, total] = await this.transactionRepository.findAndCount({
       relations: ['account', 'category', 'transactionFiles'],

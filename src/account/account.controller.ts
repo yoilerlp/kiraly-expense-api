@@ -6,6 +6,7 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { AccountService } from './account.service';
 import { CreateAccountDTO, UpdateAccountDTO } from './dto/create-account.dto';
@@ -17,13 +18,23 @@ export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
   @Get()
-  getAllByUser(@GetUser() user: IUserToken) {
-    return this.accountService.getAllAcountsByUserId(user.userId);
+  getAllByUser(@GetUser() user: IUserToken, @Query() query: any) {
+    return this.accountService.getAllAcountsByUserId({
+      userId: user.userId,
+      type: query?.type,
+    });
   }
 
   @Post()
   createAccount(@Body() body: CreateAccountDTO, @GetUser() user: any) {
     return this.accountService.createAccount(body, user);
+  }
+
+  @Get('loan')
+  getAllLoanAccountsWithBalanceByUserId(@GetUser() user: IUserToken) {
+    return this.accountService.getAllLoanAccountsWithBalanceByUserId({
+      userId: user.userId,
+    });
   }
 
   @Get(':id')
