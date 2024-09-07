@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build && cp .env ./dist",
+    "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "build:image": "yarn build &&  docker buildx build --platform linux/amd64 -t yoylercordoba/expense-tracker:dev -f ./Dockerfile .",
