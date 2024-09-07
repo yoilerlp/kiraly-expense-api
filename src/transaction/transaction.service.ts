@@ -428,8 +428,7 @@ export class TransactionService {
 
   async insertRandosTransactions(user: IUserToken) {
     const accountIds = [
-      'ed2af030-afc5-4bbe-81f3-b73057d7e79b',
-      '6a9bfe8b-487e-4f4a-800c-c2b16a318fde',
+      'c379c428-d7e0-4a68-8d06-46f1562f0337',
     ];
 
     const categoryIds = [
@@ -437,6 +436,9 @@ export class TransactionService {
       '7dd977c9-86e5-422a-8504-ee747e022395',
       'f26cbb39-7ef9-4e0d-8ddf-1686f38d4707',
       '34e60374-406e-47df-b0e1-084afea0d6f0',
+      '34e60374-406e-47df-b0e1-084afea0d6f0',
+      'faecf49a-977e-4c65-9ae2-ea76d067ed77',
+      'e2e43a02-e34b-4ff6-b466-a5821bd2f98a'
     ];
 
     const transactionTypes = ['EXPENSE', 'INCOME'];

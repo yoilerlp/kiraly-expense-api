@@ -21,7 +21,7 @@ import { StatisticsModule } from './statistics/statistics.module';
     ConfigModule.forRoot({
       validate,
       isGlobal: true,
-      envFilePath: '.env',
+      // envFilePath: '.env',
     }),
 
     TypeOrmModule.forRootAsync({
@@ -38,6 +38,7 @@ import { StatisticsModule } from './statistics/statistics.module';
           retryAttempts: 3,
           useUTC: true,
           timezone: 'Z',
+          // ssl: true,
           // logger: 'file',
           // logging: 'all',
           // dropSchema: true,
