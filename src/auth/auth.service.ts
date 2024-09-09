@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { comparePassword } from '@/common/helper/password';
 import { UserService } from '@/user/user.service';
 import { LoginUserDto } from './dto/login.dto';
+import { USER_NO_ACTIVE } from './util';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +20,8 @@ export class AuthService {
   async loginUser(loginUserDto: LoginUserDto) {
     const user = await this.usersService.getUserByEmail(loginUserDto.email);
     const { password, ...restUser } = user;
-    if (!user.isActive) throw new UnauthorizedException('User not active');
+    if (!user.isActive) throw new UnauthorizedException(USER_NO_ACTIVE);
+
     const isMatch = await comparePassword(loginUserDto.password, password);
     if (!isMatch) throw new BadRequestException('Invalid credentials');
 
