@@ -427,18 +427,13 @@ export class TransactionService {
   }
 
   async insertRandosTransactions(user: IUserToken) {
-    const accountIds = [
-      'c379c428-d7e0-4a68-8d06-46f1562f0337',
-    ];
+    const accountIds = ['5c63ce85-4e6e-4358-9a5b-d53b37b44bc5'];
 
     const categoryIds = [
-      '0c00c973-7c7e-47ae-a68f-76e9446d37cc',
-      '7dd977c9-86e5-422a-8504-ee747e022395',
-      'f26cbb39-7ef9-4e0d-8ddf-1686f38d4707',
-      '34e60374-406e-47df-b0e1-084afea0d6f0',
-      '34e60374-406e-47df-b0e1-084afea0d6f0',
-      'faecf49a-977e-4c65-9ae2-ea76d067ed77',
-      'e2e43a02-e34b-4ff6-b466-a5821bd2f98a'
+      '5b8fefe4-a2ea-4ff3-9ec4-e204e6baad97',
+      'bae09217-eb89-42fa-a5dd-419378875fe1',
+      '6780b39f-a233-4e4e-91c8-ce09e95047b6',
+      '06aada52-bdae-4321-9322-7f4d59f0004c',
     ];
 
     const transactionTypes = ['EXPENSE', 'INCOME'];

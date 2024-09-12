@@ -21,11 +21,13 @@ import { StatisticsModule } from './statistics/statistics.module';
     ConfigModule.forRoot({
       validate,
       isGlobal: true,
-      // envFilePath: '.env',
+      envFilePath: '.env',
     }),
 
     TypeOrmModule.forRootAsync({
       useFactory(config: ConfigService) {
+        const isDev = config.get('APP_IS_DEV') === 'true';
+
         return {
           type: 'postgres',
           host: config.get('DB_HOST'),
@@ -38,7 +40,7 @@ import { StatisticsModule } from './statistics/statistics.module';
           retryAttempts: 3,
           useUTC: true,
           timezone: 'Z',
-          ssl: true,
+          ssl: !isDev,
           // logger: 'file',
           // logging: 'all',
           // dropSchema: true,
