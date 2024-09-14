@@ -13,10 +13,12 @@ import {
 } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FileService } from '@/file/file.service';
-import { TransferFile } from '@/entities';
+import { Category, Transaction, TransferFile } from '@/entities';
 import { IUserToken } from '@/common/interface/userToken';
 import { FilterTransferDto } from '@/transaction/dto/filter-transaction.dto';
 import { generateSortBasicFilter } from '@/common/helper/filter';
+import { TransactionType } from '@/transaction/interface/transaction.interface';
+import { TRANFER_CATEGORY_KEY } from './util';
 
 @Injectable()
 export class TransferService {
@@ -58,6 +60,36 @@ export class TransferService {
         userId: user.userId,
       });
       await queryRunner.manager.save(transfer);
+
+      const tranferCategory = await queryRunner.manager.findOne(Category, {
+        where: {
+          key: TRANFER_CATEGORY_KEY,
+        },
+      });
+
+      if (!tranferCategory) {
+        throw new BadRequestException('Transfer category not found');
+      }
+
+      const expenseTransaction = queryRunner.manager.create(Transaction, {
+        accountId: data.originAccountId,
+        userId: user.userId,
+        categoryId: tranferCategory.id,
+        type: TransactionType.EXPENSE,
+        description: `Tranfer expense: ${data.description}`,
+        amount: data.amount,
+      });
+
+      const incomeTransaction = queryRunner.manager.create(Transaction, {
+        accountId: data.destinationAccountId,
+        userId: user.userId,
+        categoryId: tranferCategory.id,
+        type: TransactionType.INCOME,
+        description: `Tranfer income: ${data.description}`,
+        amount: data.amount,
+      });
+
+      await queryRunner.manager.save([expenseTransaction, incomeTransaction]);
 
       // upload files
       if (files && files.length > 0) {
@@ -138,6 +170,7 @@ export class TransferService {
       order: orderResultBy,
       skip,
       take,
+      relations: ['originAccount', 'destinationAccount', 'transferFiles'],
     });
 
     return {
