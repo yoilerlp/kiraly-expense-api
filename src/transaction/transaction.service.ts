@@ -379,7 +379,8 @@ export class TransactionService {
     // account filters
     // by default filter for non-loans
     whereOptions.account = {
-      type: accountTypes?.length > 0 ? In(accountTypes) : Not(AccountType.LOAN),
+      // type: accountTypes?.length > 0 ? In(accountTypes) : Not(AccountType.LOAN),
+      type: accountTypes?.length > 0 ? In(accountTypes) : undefined,
     };
 
     const [result, total] = await this.transactionRepository.findAndCount({
