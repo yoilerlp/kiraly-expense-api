@@ -12,7 +12,6 @@ import {
   In,
   LessThanOrEqual,
   MoreThanOrEqual,
-  Not,
   QueryRunner,
   Repository,
 } from 'typeorm';
@@ -27,12 +26,10 @@ import {
 } from './dto/filter-transaction.dto';
 import { generateSortBasicFilter } from '@/common/helper/filter';
 import { GET_MIN_AND_MAX_TRANSACTION_DATE } from '@/common/helper/query';
-import { getEndOfMonth } from '@/common/helper/date';
 import { TransactionType } from './interface/transaction.interface';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { TransactionEvents } from '@/common/events';
-import { AccountType } from '@/account/interfaces/account.interface';
 import { OrderBy } from '@/common/interface/pagination';
 
 @Injectable()
@@ -76,22 +73,21 @@ export class TransactionService {
     query: GetBalanceDto;
   }) {
     try {
-      const startdate = `${query.year}-${query.month}-01`;
+      // const startdate = `${query.year}-${query.month}-01`;
 
-      const end = getEndOfMonth(new Date(startdate));
+      // const end = getEndOfMonth(new Date(startdate));
 
-      const whereOptions: FindOneOptions<Transaction>['where'] = {
-        userId: user.userId,
-      };
+      // const whereOptions: FindOneOptions<Transaction>['where'] = {
+      //   userId: user.userId,
+      // };
 
-      whereOptions.createdAt = Between(new Date(startdate), new Date(end));
-
+      // whereOptions.createdAt = Between(new Date(startdate), new Date(end));
       const transactionsResult = await this.findAll({
         userId: user.userId,
         query: {
           orderBy: OrderBy.NEWEST,
-          minDate: startdate,
-          maxDate: end,
+          minDate: query.minDate,
+          maxDate: query.maxDate,
           limit: 1000,
         },
       });
@@ -124,6 +120,7 @@ export class TransactionService {
       );
 
       return {
+        balanceValue: balance.expense - balance.income,
         balance,
         transactions,
       };

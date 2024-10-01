@@ -62,9 +62,14 @@ export class FilterTransferDto extends PickType(FilterTransactionDto, [
 ]) {}
 
 export class GetBalanceDto {
-  @IsNumber()
-  month: number;
+  // @IsNumber()
+  // month: number;
 
-  @IsNumber()
-  year: number;
+  // @IsNumber()
+  // year: number;
+
+  @IsISO8601()
+  minDate: string;
+  @IsISO8601()
+  maxDate: string;
 }
