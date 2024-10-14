@@ -13,4 +13,16 @@ export class CreateCategoryDto {
   @IsString()
   @IsNotEmpty()
   key: string;
+
+  @IsString()
+  @IsNotEmpty()
+  mainColor: string;
+
+  @IsString()
+  @IsNotEmpty()
+  subColor: string;
+
+  @IsString()
+  @IsNotEmpty()
+  icon: string;
 }
