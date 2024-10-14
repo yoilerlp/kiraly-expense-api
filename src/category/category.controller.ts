@@ -31,6 +31,10 @@ export class CategoryController {
   // createBull(@Body() body: any) {
   //   return this.categoryService.createMany(body);
   // }
+  // @Get('update-colors')
+  // UpdateCagoryColorsByCategoryKey() {
+  //   return this.categoryService.updateCategoryColorByKey();
+  // }
 
   @Get(':id')
   GetOne(@GetUser() user: IUserToken, @Param('id', ParseUUIDPipe) id: string) {
@@ -59,8 +63,5 @@ export class CategoryController {
     });
   }
 
-  // @Get('update-colors')
-  // UpdateCagoryColorsByCategoryKey() {
-  //   return this.categoryService.updateCategoryColorByKey();
-  // }
+  
 }
