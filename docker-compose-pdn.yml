@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  eduplay-api:
+    container_name: kiraly-expense-tracker-api
+    build:
+      context: .   # Usa el Dockerfile en la misma carpeta
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"  # Mapea el puerto 3000 del contenedor al 3001 en la máquina
+    environment:
+      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
+    restart: unless-stopped
