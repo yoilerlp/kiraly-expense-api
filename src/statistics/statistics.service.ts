@@ -1,8 +1,6 @@
 import { TransactionService } from '@/transaction/transaction.service';
 import { Injectable } from '@nestjs/common';
 import { ReportsParamsDto } from './dto/reports-params.dto';
-import { TransactionType } from '@/transaction/interface/transaction.interface';
-import { Category } from '@/entities';
 import { calcBasicExpenses } from './helpers/calcBasicExpenses';
 import { BudgetService } from '@/budget/budget.service';
 import { Between } from 'typeorm';
@@ -13,6 +11,10 @@ export class StatisticsService {
     private transactionService: TransactionService,
     private budgetService: BudgetService,
   ) {}
+
+  async getUserGeneralBalance(userId: string) {
+    return this.transactionService.getGeneralBalance(userId);
+  }
 
   async getBasicReport(
     params: ReportsParamsDto & {

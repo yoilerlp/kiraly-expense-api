@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { StatisticsService } from './statistics.service';
 import { ReportsParamsDto } from './dto/reports-params.dto';
 import { GetUser } from '@/common/decorators/user';
@@ -14,5 +14,10 @@ export class StatisticsController {
       ...query,
       userId: user.userId,
     });
+  }
+
+  @Get('expense-general-balance')
+  getGeneralBalance(@GetUser() user: IUserToken) {
+    return this.statisticsService.getUserGeneralBalance(user.userId);
   }
 }

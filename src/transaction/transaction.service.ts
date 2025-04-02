@@ -65,6 +65,23 @@ export class TransactionService {
     }
   }
 
+  async getGeneralBalance(userId: string) {
+    const result = this.transactionRepository
+      .createQueryBuilder('t')
+      .select(
+        "SUM(CASE WHEN t.type = 'EXPENSE' THEN t.amount ELSE 0 END)",
+        'total_expense',
+      )
+      .addSelect(
+        "SUM(CASE WHEN t.type = 'INCOME' THEN t.amount ELSE 0 END)",
+        'total_income',
+      )
+      .where('t.userId = :userId', { userId })
+      .getRawOne();
+
+    return result;
+  }
+
   async getUserBalanceByMonth({
     user,
     query,
