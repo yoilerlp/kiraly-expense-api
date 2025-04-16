@@ -34,6 +34,9 @@ class EnvironmentVariables {
 
   AWS_S3_BUCKET: string;
 
+  // Eexpo
+  EXPO_ACCESS_TOKEN: string;
+
 }
 
 export function validate(config: Record<string, unknown>) {

@@ -8,3 +8,4 @@ export * from '../file/entities/transaction-file.entity';
 export * from '../file/entities/transfer-file.entity';
 export * from '../transfer/entities/transfer.entity';
 export * from '../budget/entities/budget.entity';
+export * from '../notification/entities/push-token.entity';

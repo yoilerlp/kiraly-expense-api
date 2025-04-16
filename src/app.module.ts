@@ -15,6 +15,7 @@ import { TransferModule } from './transfer/transfer.module';
 import { BudgetModule } from './budget/budget.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { StatisticsModule } from './statistics/statistics.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -72,6 +73,8 @@ import { StatisticsModule } from './statistics/statistics.module';
     BudgetModule,
 
     StatisticsModule,
+
+    NotificationModule,
   ],
   controllers: [],
   providers: [],
