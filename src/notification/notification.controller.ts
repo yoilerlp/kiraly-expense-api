@@ -22,8 +22,14 @@ export class NotificationController {
   sendTestNotification(@Param('userId') userId: string) {
     return this.notificationService.sendNotificationToUser({
       userId: userId,
-      title: 'Test Notification desde mi back',
+      title: 'Test budget click',
       message: 'This is a test notification',
+      notificationSettings: {
+        data: {
+          type: 'budget-alert',
+          budgetId: '0733f3a4-f528-47ca-b03d-6babf60706f3',
+        }
+      }
     });
   }
 }

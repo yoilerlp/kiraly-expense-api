@@ -10,6 +10,6 @@ import { ExpoServerClientProvider } from './providers/ExpoServerClient';
   imports: [TypeOrmModule.forFeature([PushToken, User])],
   providers: [NotificationService, ExpoServerClientProvider],
   controllers: [NotificationController],
-  exports: [ExpoServerClientProvider],
+  exports: [ExpoServerClientProvider, NotificationService],
 })
 export class NotificationModule {}

@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Budget } from './entities/budget.entity';
 import { TransactionModule } from '@/transaction/transaction.module';
 import { BudgetEventsService } from './budget-events.service';
+import { NotificationModule } from '@/notification/notification.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Budget]), TransactionModule],
+  imports: [TypeOrmModule.forFeature([Budget]), TransactionModule, NotificationModule],
   controllers: [BudgetController],
   providers: [BudgetService, BudgetEventsService],
   exports: [BudgetService],
