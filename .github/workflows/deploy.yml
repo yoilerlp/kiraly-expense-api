@@ -1,0 +1,60 @@
+name: Deploy to Server
+
+on:
+  workflow_dispatch:
+    inputs:
+      DOCKER_REPO:
+        description: 'DockerHub repository name (e.g. yoilerlp/my-app)'
+        required: true
+      CONTAINER_NAME:
+        description: 'Docker container name (e.g. my-app)'
+        required: true
+      SERVER_PORT:
+        description: 'puerto para acceder al servio del contenedor'
+        required: true
+      IMAGE_TAG:
+        description: 'Docker image tag (default: latest)'
+        required: false
+        default: 'latest'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      IMAGE_TAG: ${{ github.event.inputs.IMAGE_TAG }}
+      DOCKER_REPO: ${{ github.event.inputs.DOCKER_REPO }}
+      SERVER_USER: ${{ secrets.SERVER_USER }}
+      SERVER_HOST: ${{ secrets.SERVER_HOST }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      CONTAINER_NAME: ${{ github.event.inputs.CONTAINER_NAME }}
+      SERVER_PORT: ${{ github.event.inputs.DOCKER_REPO }}
+      DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+      SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    steps:
+      - name: Save SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "$SERVER_HOST" >> ~/.ssh/known_hosts
+
+      - name: Deploy on remote server
+        run: |
+          ssh $SERVER_USER@$SERVER_HOST << EOF
+            echo "🔐 Logging in to Docker..."
+            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+            echo "📥 Pulling image..."
+            docker pull $DOCKER_REPO:$IMAGE_TAG
+
+            echo "🧼 Stopping and removing old container..."
+            docker stop $CONTAINER_NAME || true
+            docker rm $CONTAINER_NAME || true
+
+            echo "🚀 Running new container with Doppler token..."
+            docker run -d \
+              --name $CONTAINER_NAME \
+              -p $SERVER_PORT:3000 \

@@ -1,0 +1,25 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: build-deploy-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+
+  deploy:
+    needs: build
+    uses: ./.github/workflows/deploy.yml
+    with:
+      IMAGE_TAG: ${{ needs.build.outputs.short_sha }}
+      DOCKER_REPO: ${{ needs.build.outputs.image }}
+      CONTAINER_NAME: kiraly-expense-tracker-api
+      SERVER_PORT: 3000
+    secrets: inherit
