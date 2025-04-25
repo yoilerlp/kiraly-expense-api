@@ -50,7 +50,8 @@ jobs:
           ssh $SERVER_USER@$SERVER_HOST << EOF
             echo "🔐 Logging in to Docker..."
             echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-
+            echo "Docker repo: $DOCKER_REPO"
+            echo "Image tag: $IMAGE_TAG"
             echo "📥 Pulling image..."
             docker pull $DOCKER_REPO:$IMAGE_TAG
 
