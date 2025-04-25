@@ -55,6 +55,9 @@ jobs:
             docker pull $DOCKER_REPO:$IMAGE_TAG
 
             echo "🧼 Stopping and removing old container..."
+            echo "container name: $CONTAINER_NAME"
+            echo "server port: $SERVER_PORT"
+            
             docker stop $CONTAINER_NAME || true
             docker rm $CONTAINER_NAME || true
 
@@ -62,3 +65,4 @@ jobs:
             docker run -d \
               --name $CONTAINER_NAME \
               -p $SERVER_PORT:3000 \
+              -e DOPPLER_TOKEN=$DOPPLER_TOKEN \
