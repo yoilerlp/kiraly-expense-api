@@ -35,8 +35,8 @@ jobs:
         run: |
           short_sha="${GITHUB_SHA::7}"
           image="${DOCKER_USERNAME}/${DOCKER_REPO}"
-          echo "short_sha=$short_sha" >> $GITHUB_ENV
-          echo "image=$image" >> $GITHUB_ENV
+          echo "short_sha=$short_sha" >> $GITHUB_OUTPUT
+          echo "image=$image" >> $GITHUB_OUTPUT
           echo "::set-output name=short_sha::$short_sha"
           echo "::set-output name=image::$image"
 
