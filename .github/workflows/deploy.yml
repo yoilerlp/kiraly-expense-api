@@ -33,7 +33,7 @@ jobs:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       CONTAINER_NAME: ${{ inputs.CONTAINER_NAME }}
-      SERVER_PORT: ${{ inputs.DOCKER_REPO }}
+      SERVER_PORT: ${{ inputs.SERVER_PORT }}
       DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
       SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
