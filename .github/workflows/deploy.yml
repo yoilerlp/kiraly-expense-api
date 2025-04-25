@@ -1,6 +1,7 @@
 name: Deploy to Server
 
 on:
+  workflow_call:
   workflow_dispatch:
     inputs:
       DOCKER_REPO:
