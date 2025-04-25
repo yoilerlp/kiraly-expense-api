@@ -66,3 +66,5 @@ jobs:
               --name $CONTAINER_NAME \
               -p $SERVER_PORT:3000 \
               -e DOPPLER_TOKEN=$DOPPLER_TOKEN \
+              $DOCKER_REPO:$IMAGE_TAG
+          EOF
