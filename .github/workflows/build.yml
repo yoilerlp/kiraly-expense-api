@@ -2,11 +2,21 @@ name: Build API Image and Push
 
 on:
   workflow_call:
+    outputs:
+      short_sha:
+        description: 'Short SHA of the commit'
+        value: ${{ jobs.build.outputs.short_sha }}
+      docker_image:
+        description: 'Docker image name'
+        value: ${{ jobs.build.outputs.docker_image }}
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      short_sha: ${{ steps.tag.outputs.short_sha }}
+      docker_image: ${{ steps.tag.outputs.image }}
 
     env:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -37,16 +47,8 @@ jobs:
           image="${DOCKER_USERNAME}/${DOCKER_REPO}"
           echo "short_sha=$short_sha" >> $GITHUB_OUTPUT
           echo "image=$image" >> $GITHUB_OUTPUT
-          echo "crated_img=$image" >> $GITHUB_OUTPUT
-          echo "created_tag=$image" >> $GITHUB_OUTPUT
-          echo "TAG: $created_tag"
-          echo "IMAGE: $created_img"
-
-      - name: Save docker tag
-        run: echo "docker_tag=$short_sha" >> $GITHUB_OUTPUT
-
-      - name: Save docker repo
-        run: echo "docker_image=$image" >> $GITHUB_OUTPUT
+          echo "Short SHA: $short_sha"
+          echo "Image: $image"
 
       # Construir la imagen con el Dockerfile y el tag generado
       - name: Build Docker image with commit tag
