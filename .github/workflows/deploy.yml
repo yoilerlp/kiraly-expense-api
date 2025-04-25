@@ -2,21 +2,24 @@ name: Deploy to Server
 
 on:
   workflow_call:
-  workflow_dispatch:
     inputs:
       DOCKER_REPO:
         description: 'DockerHub repository name (e.g. yoilerlp/my-app)'
         required: true
+        type: string
       CONTAINER_NAME:
         description: 'Docker container name (e.g. my-app)'
         required: true
+        type: string
       SERVER_PORT:
         description: 'puerto para acceder al servio del contenedor'
         required: true
+        type: number
       IMAGE_TAG:
         description: 'Docker image tag (default: latest)'
         required: false
         default: 'latest'
+        type: string
 
 jobs:
   deploy:
