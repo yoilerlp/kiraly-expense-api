@@ -19,7 +19,7 @@ jobs:
     uses: ./.github/workflows/deploy.yml
     with:
       IMAGE_TAG: ${{ needs.build.outputs.short_sha }}
-      DOCKER_REPO: ${{ needs.build.outputs.docker_image }}
+      DOCKER_REPO: yoylercordoba/expense-tracker
       CONTAINER_NAME: kiraly-expense-tracker-api
       SERVER_PORT: 3000
     secrets: inherit

@@ -6,9 +6,6 @@ on:
       short_sha:
         description: 'Short SHA of the commit'
         value: ${{ jobs.build.outputs.short_sha }}
-      docker_image:
-        description: 'Docker image name'
-        value: ${{ jobs.build.outputs.docker_image }}
   workflow_dispatch:
 
 jobs:
@@ -16,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       short_sha: ${{ steps.tag.outputs.short_sha }}
-      docker_image: ${{ steps.tag.outputs.image }}
 
     env:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -48,7 +44,8 @@ jobs:
           echo "short_sha=$short_sha" >> $GITHUB_OUTPUT
           echo "image=$image" >> $GITHUB_OUTPUT
           echo "Short SHA: $short_sha"
-          echo "Image: $image"
+          # No mostrar el nombre completo de la imagen para evitar exponer secretos
+          echo "Image tag prepared (not shown for security)"
 
       # Construir la imagen con el Dockerfile y el tag generado
       - name: Build Docker image with commit tag
