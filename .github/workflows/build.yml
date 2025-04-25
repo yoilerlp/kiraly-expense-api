@@ -14,41 +14,51 @@ jobs:
       DOCKER_REPO: ${{ secrets.DOCKER_REPO }}
 
     steps:
-      # clonar archvivos del repositorio
+      # Clonar archivos del repositorio
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # instalar docker para contruir la imagen
+      # Instalar Docker para construir la imagen
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Loguearse en docker hub
+      # Loguearse en Docker Hub
       - name: Log in to DockerHub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Crea una variable tag donde para la imagen de docker. Le adjunta el hash del commit y ademas el lastest
+      # Crear una variable tag para la imagen de Docker
       - name: Set image tags
         id: tag
         run: |
-          echo "short_sha=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
-          echo "image=${DOCKER_USERNAME}/${DOCKER_REPO}" >> $GITHUB_OUTPUT
+          short_sha="${GITHUB_SHA::7}"
+          image="${DOCKER_USERNAME}/${DOCKER_REPO}"
+          echo "short_sha=$short_sha" >> $GITHUB_ENV
+          echo "image=$image" >> $GITHUB_ENV
+          echo "::set-output name=short_sha::$short_sha"
+          echo "::set-output name=image::$image"
 
-      # Construye la imagen con el Dockerfile y el tag generado
+      # Construir la imagen con el Dockerfile y el tag generado
       - name: Build Docker image with commit tag
         run: |
           docker build -t ${{ steps.tag.outputs.image }}:${{ steps.tag.outputs.short_sha }} .
 
-      # Tag the image with commit tag and latest
+      # Etiquetar la imagen como "latest"
       - name: Tag image as latest
         run: |
           docker tag ${{ steps.tag.outputs.image }}:${{ steps.tag.outputs.short_sha }} \
                  ${{ steps.tag.outputs.image }}:latest
 
+      # Subir la imagen con el tag del commit
       - name: Push Docker image with commit tag
         run: docker push ${{ steps.tag.outputs.image }}:${{ steps.tag.outputs.short_sha }}
 
+      # Subir la imagen con el tag "latest"
       - name: Push Docker image with latest tag
         run: docker push ${{ steps.tag.outputs.image }}:latest
+
+    outputs:
+      short_sha: ${{ steps.tag.outputs.short_sha }}
+      image: ${{ steps.tag.outputs.image }}

@@ -26,14 +26,14 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE_TAG: ${{ github.event.inputs.IMAGE_TAG }}
-      DOCKER_REPO: ${{ github.event.inputs.DOCKER_REPO }}
+      IMAGE_TAG: ${{ inputs.IMAGE_TAG }}
+      DOCKER_REPO: ${{ inputs.DOCKER_REPO }}
       SERVER_USER: ${{ secrets.SERVER_USER }}
       SERVER_HOST: ${{ secrets.SERVER_HOST }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      CONTAINER_NAME: ${{ github.event.inputs.CONTAINER_NAME }}
-      SERVER_PORT: ${{ github.event.inputs.DOCKER_REPO }}
+      CONTAINER_NAME: ${{ inputs.CONTAINER_NAME }}
+      SERVER_PORT: ${{ inputs.DOCKER_REPO }}
       DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
       SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
