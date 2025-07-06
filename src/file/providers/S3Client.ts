@@ -10,9 +10,11 @@ const S3ClientProvider: Provider = {
     const region: string = config.get('AWS_REGION');
     const accessKeyId: string = config.get('AWS_ACCESS_KEY');
     const secretAccessKey: string = config.get('AWS_SECRET_KEY');
-
+    const bucketEndPoint: string = config.get('BUCKET_ENDPOINT');
     const client = new S3Client({
+      endpoint: bucketEndPoint,
       region,
+      forcePathStyle: false,
       credentials: {
         accessKeyId,
         secretAccessKey,

@@ -27,7 +27,7 @@ export class FileService {
   ) {}
 
   async uploadFileToStore(file: Express.Multer.File) {
-      const bucketFolder = 'public';
+      const bucketFolder = 'public/expense-tracker';
 
       const bucketName = this.configService.get('AWS_S3_BUCKET');
 
@@ -42,6 +42,7 @@ export class FileService {
         Key: key,
         Body: file.buffer,
         ContentType: file.mimetype,
+        ACL: 'public-read',
       };
 
       const command = new PutObjectCommand(input);
