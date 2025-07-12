@@ -31,7 +31,7 @@ export class FileService {
 
       const bucketName = this.configService.get('AWS_S3_BUCKET');
 
-      const region = this.configService.get('AWS_REGION');
+      // const region = this.configService.get('AWS_REGION');
 
       const originalName = removeSpecialCharacters(file.originalname);
 
@@ -47,7 +47,7 @@ export class FileService {
 
       const command = new PutObjectCommand(input);
 
-      const fileUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${key}`;
+      const fileUrl = `https://${bucketName}.sfo3.cdn.digitaloceanspaces.com/${key}`;
 
       await this.s3Client.send(command);
 

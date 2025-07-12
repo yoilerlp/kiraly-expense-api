@@ -25,6 +25,7 @@ async function bootstrap() {
     }),
   );
 
+  app.enableCors();
   // Swagger
   const config = new DocumentBuilder()
     .setTitle('Kiraly Expense Tracker API')
