@@ -30,7 +30,7 @@ class EnvironmentVariables {
   @IsString()
   AWS_ACKEY: string;
   @IsString()
-  AWS_SECRET_KEY: string;
+  AWS_SKEY: string;
 
   AWS_S3_BUCKET: string;
 
