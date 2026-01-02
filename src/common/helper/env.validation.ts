@@ -28,7 +28,7 @@ class EnvironmentVariables {
   @IsString()
   AWS_REGION: string;
   @IsString()
-  AWS_ACCESS_KEY: string;
+  AWS_ACKEY: string;
   @IsString()
   AWS_SECRET_KEY: string;
 

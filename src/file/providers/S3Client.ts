@@ -8,7 +8,7 @@ const S3ClientProvider: Provider = {
   provide: S3ClientProviderToken,
   useFactory: async (config: ConfigService) => {
     const region: string = config.get('AWS_REGION');
-    const accessKeyId: string = config.get('AWS_ACCESS_KEY');
+    const accessKeyId: string = config.get('AWS_ACKEY');
     const secretAccessKey: string = config.get('AWS_SECRET_KEY');
     const bucketEndPoint: string = config.get('BUCKET_ENDPOINT');
     const client = new S3Client({
